@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambria AI - Live Call Monitor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #3B82F6;
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --dark: #0F172A;
+            --gray-900: #111827;
+            --gray-800: #1F2937;
+            --gray-700: #374151;
+            --gray-500: #6B7280;
+            --gray-400: #9CA3AF;
+            --white: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--gray-900) 100%);
+            color: var(--white);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), #8B5CF6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 24px;
+        }
+        
+        .brand-text h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--primary), #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .brand-text p {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+        
+        .status-info {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 100px;
+        }
+        
+        .status-badge.disconnected {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-badge.disconnected .status-dot {
+            background: var(--danger);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .call-count {
+            padding: 0.75rem 1.5rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 100px;
+            font-weight: 600;
+        }
+        
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+        
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            text-align: center;
+            color: var(--gray-500);
+        }
+        
+        .empty-state i {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.3;
+        }
+        
+        .empty-state h2 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            color: var(--gray-400);
+        }
+        
+        .calls-grid {
+            display: grid;
+            gap: 2rem;
+        }
+        
+        .call-card {
+            background: var(--gray-900);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            overflow: hidden;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .call-header {
+            padding: 1.5rem;
+            background: rgba(59, 130, 246, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .call-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .call-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), #8B5CF6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .call-details h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .call-details p {
+            font-size: 0.875rem;
+            color: var(--gray-400);
+        }
+        
+        .call-meta {
+            text-align: right;
+        }
+        
+        .call-duration {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .call-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        
+        .call-pulse {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .transcript-container {
+            padding: 2rem;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .message {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            animation: messageSlideIn 0.3s ease;
+        }
+        
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .message.assistant {
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+        
+        .message.user .message-avatar {
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .message.assistant .message-avatar {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid var(--success);
+            color: var(--success);
+        }
+        
+        .message-bubble {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 12px;
+            max-width: 70%;
+        }
+        
+        .message.user .message-bubble {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        .message.assistant .message-bubble {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        
+        .message-content {
+            line-height: 1.6;
+        }
+        
+        .message-time {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-top: 0.5rem;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-700);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-600);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="brand">
+            <div class="logo">C</div>
+            <div class="brand-text">
+                <h1>Cambria Medical AI</h1>
+                <p>Live Call Monitor</p>
+            </div>
+        </div>
+        
+        <div class="status-info">
+            <div class="status-badge" id="statusBadge">
+                <div class="status-dot"></div>
+                <span id="statusText">Connecting...</span>
+            </div>
+            <div class="call-count">
+                <i class="fas fa-phone-volume"></i>
+                <span id="callCount">0</span> Active
+            </div>
+        </div>
+    </header>
+    
+    <main class="main-content" id="mainContent">
+        <div class="empty-state">
+            <i class="fas fa-phone-slash"></i>
+            <h2>No Active Calls</h2>
+            <p>Waiting for incoming calls...</p>
+        </div>
+    </main>
+    
+    <script>
+        const CallMonitor = {
+            ws: null,
+            calls: new Map(),
+            durations: new Map(),
+            
+            init() {
+                this.connectWebSocket();
+                setInterval(() => this.updateDurations(), 1000);
+            },
+            
+            connectWebSocket() {
+                const wsUrl = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws`;
+                this.ws = new WebSocket(wsUrl);
+                
+                this.ws.onopen = () => {
+                    console.log('WebSocket connected');
+                    this.updateStatus('connected');
+                };
+                
+                this.ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        this.handleMessage(data);
+                    } catch (e) {
+                        console.error('Failed to parse message:', e);
+                    }
+                };
+                
+                this.ws.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                    this.updateStatus('error');
+                };
+                
+                this.ws.onclose = () => {
+                    console.log('WebSocket disconnected');
+                    this.updateStatus('disconnected');
+                    setTimeout(() => this.connectWebSocket(), 3000);
+                };
+            },
+            
+            handleMessage(data) {
+                switch(data.type) {
+                    case 'initial_state':
+                        data.calls.forEach(call => {
+                            this.calls.set(call.call_sid, call);
+                        });
+                        this.render();
+                        break;
+                        
+                    case 'call_started':
+                        this.calls.set(data.call.call_sid, data.call);
+                        this.render();
+                        break;
+                        
+                    case 'message_added':
+                        const call = this.calls.get(data.call_sid);
+                        if (call) {
+                            call.messages.push(data.message);
+                            this.addMessageToDOM(data.call_sid, data.message);
+                        }
+                        break;
+                        
+                    case 'call_ended':
+                        this.calls.delete(data.call_sid);
+                        this.durations.delete(data.call_sid);
+                        this.render();
+                        break;
+                }
+            },
+            
+            updateStatus(status) {
+                const badge = document.getElementById('statusBadge');
+                const text = document.getElementById('statusText');
+                
+                badge.classList.remove('disconnected');
+                
+                switch(status) {
+                    case 'connected':
+                        text.textContent = 'Connected';
+                        break;
+                    case 'disconnected':
+                        text.textContent = 'Reconnecting...';
+                        badge.classList.add('disconnected');
+                        break;
+                    case 'error':
+                        text.textContent = 'Connection Error';
+                        badge.classList.add('disconnected');
+                        break;
+                }
+            },
+            
+            render() {
+                const mainContent = document.getElementById('mainContent');
+                const callCount = document.getElementById('callCount');
+                
+                callCount.textContent = this.calls.size;
+                
+                if (this.calls.size === 0) {
+                    mainContent.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-phone-slash"></i>
+                            <h2>No Active Calls</h2>
+                            <p>Waiting for incoming calls...</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                mainContent.innerHTML = `<div class="calls-grid" id="callsGrid"></div>`;
+                const grid = document.getElementById('callsGrid');
+                
+                this.calls.forEach((call, callSid) => {
+                    grid.appendChild(this.createCallCard(call));
+                });
+            },
+            
+            createCallCard(call) {
+                const card = document.createElement('div');
+                card.className = 'call-card';
+                card.id = `call-${call.call_sid}`;
+                
+                const duration = this.calculateDuration(call.started_at);
+                this.durations.set(call.call_sid, call.started_at);
+                
+                card.innerHTML = `
+                    <div class="call-header">
+                        <div class="call-info">
+                            <div class="call-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="call-details">
+                                <h3>${this.formatPhoneNumber(call.from)}</h3>
+                                <p>Incoming call • ${new Date(call.started_at).toLocaleTimeString()}</p>
+                            </div>
+                        </div>
+                        <div class="call-meta">
+                            <div class="call-duration" id="duration-${call.call_sid}">${duration}</div>
+                            <div class="call-status">
+                                <div class="call-pulse"></div>
+                                LIVE
+                            </div>
+                        </div>
+                    </div>
+                    <div class="transcript-container" id="transcript-${call.call_sid}">
+                        ${call.messages.map(msg => this.createMessageHTML(msg)).join('')}
+                    </div>
+                `;
+                
+                return card;
+            },
+            
+            createMessageHTML(message) {
+                const time = new Date(message.timestamp).toLocaleTimeString([], { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                const role = message.role === 'user' ? 'user' : 'assistant';
+                const avatar = message.role === 'user' ? 'C' : 'AI';
+                
+                return `
+                    <div class="message ${role}">
+                        <div class="message-avatar">${avatar}</div>
+                        <div class="message-bubble">
+                            <div class="message-content">${this.escapeHtml(message.content)}</div>
+                            <div class="message-time">${time}</div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            addMessageToDOM(callSid, message) {
+                const container = document.getElementById(`transcript-${callSid}`);
+                if (!container) return;
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.innerHTML = this.createMessageHTML(message);
+                container.appendChild(messageDiv.firstElementChild);
+                container.scrollTop = container.scrollHeight;
+            },
+            
+            updateDurations() {
+                this.durations.forEach((startTime, callSid) => {
+                    const durationEl = document.getElementById(`duration-${callSid}`);
+                    if (durationEl) {
+                        durationEl.textContent = this.calculateDuration(startTime);
+                    }
+                });
+            },
+            
+            calculateDuration(startTime) {
+                const start = new Date(startTime);
+                const now = new Date();
+                const diff = Math.floor((now - start) / 1000);
+                
+                const minutes = Math.floor(diff / 60);
+                const seconds = diff % 60;
+                
+                return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            },
+            
+            formatPhoneNumber(number) {
+                const cleaned = number.replace(/\D/g, '');
+                if (cleaned.length === 11 && cleaned.startsWith('1')) {
+                    return `+1 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7)}`;
+                }
+                return number;
+            },
+            
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+        };
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            CallMonitor.init();
+        });
+    </script>
+</body>
+</html>
