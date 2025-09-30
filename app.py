@@ -192,6 +192,12 @@ async def root():
         return FileResponse("index.html")
     return {"status": "Live Call Transcription Monitor"}
 
+@app.get("/poa")
+async def root():
+    if os.path.exists("poa.html"):
+        return FileResponse("poa.html")
+    return {"status": "POA"}
+
 @app.get("/api/health")
 async def health_check():
     return {

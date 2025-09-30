@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambria AI | AI Receptionist MVP Strategic Plan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #000000;
+            --fg-color: #ffffff;
+            --gray-light: #9ca3af;
+            --gray-mid: #6b7280;
+            --gray-dark: #374151;
+            --gray-darker: #111827;
+            --accent-glow: rgba(0, 102, 255, 0.3);
+            --accent-blue: #0066ff;
+            --accent-cyan: #00d4ff;
+            --success-green: #10b981;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            background-color: var(--bg-color);
+            color: var(--fg-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            scroll-behavior: smooth;
+        }
+
+        main { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        section { padding: 96px 0; border-bottom: 1px solid var(--gray-dark); }
+        section:last-child { border-bottom: none; }
+
+        h1, h2, h3 { font-weight: 700; letter-spacing: -0.03em; }
+
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            background: linear-gradient(90deg, #ffffff, var(--gray-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        h2 { font-size: 2.5rem; margin-bottom: 16px; }
+        h3 { font-size: 1.25rem; font-weight: 600; color: var(--fg-color); margin-bottom: 16px; }
+        p { font-size: 1.125rem; line-height: 1.7; color: var(--gray-light); max-width: 720px; }
+        
+        .section-header { text-align: center; margin-bottom: 64px; }
+        .section-header p { margin: 0 auto; }
+        .hero { padding-top: 128px; }
+        .hero-stats { display: flex; justify-content: center; gap: 48px; margin-top: 48px; flex-wrap: wrap; }
+        .hero-stat { text-align: center; }
+        .hero-stat .value { font-size: 2rem; font-weight: 700; color: var(--fg-color); }
+        .hero-stat .label { font-size: 1rem; color: var(--gray-light); }
+
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+        .card {
+            background: linear-gradient(145deg, #111827, #0d121c);
+            border: 1px solid var(--gray-dark);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover { border-color: var(--accent-blue); transform: translateY(-4px); box-shadow: 0 10px 40px var(--accent-glow); }
+        .card .icon { font-size: 1.5rem; margin-bottom: 16px; display: block; }
+        .card-text { color: var(--gray-light); font-size: 1rem; line-height: 1.6; flex-grow: 1; }
+        .card-metric { font-size: 0.875rem; color: var(--accent-blue); font-weight: 500; margin-top: 16px; }
+        
+        .diagram-container { background-color: var(--gray-darker); border: 1px solid var(--gray-dark); border-radius: 12px; padding: 32px; margin-top: 48px; overflow-x: auto; }
+        .table-container { margin-top: 48px; border: 1px solid var(--gray-dark); border-radius: 12px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 16px; text-align: left; border-bottom: 1px solid var(--gray-dark); }
+        th { background-color: var(--gray-darker); font-weight: 600; color: var(--gray-light); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        tbody tr:last-child td { border-bottom: none; }
+        td { color: var(--fg-color); }
+        
+        .cost { font-size: 2.5rem; font-weight: 700; color: var(--fg-color); }
+        .cost-label { color: var(--gray-light); font-size: 1rem; }
+        .financial-summary { display: flex; justify-content: space-around; text-align: center; margin-top: 48px; flex-wrap: wrap; }
+
+        .timeline { margin-top: 64px; position: relative; padding-left: 40px; }
+        .timeline::before { content: ''; position: absolute; left: 10px; top: 10px; bottom: 10px; width: 2px; background: linear-gradient(to bottom, var(--accent-blue), var(--accent-cyan)); }
+        .timeline-item { margin-bottom: 48px; position: relative; }
+        .timeline-item::before { content: ''; position: absolute; left: -35px; top: 5px; width: 12px; height: 12px; border-radius: 50%; background-color: var(--fg-color); border: 2px solid var(--bg-color); box-shadow: 0 0 10px var(--accent-cyan); }
+        .timeline-item h3 { color: var(--accent-cyan); font-size: 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .timeline-item h4 { font-size: 1.25rem; margin-bottom: 8px; }
+        .timeline-item p { font-size: 1rem; color: var(--gray-light); }
+
+        .gantt-table { font-size: 0.875rem; margin-top: 48px; }
+        .gantt-table th, .gantt-table td { padding: 8px 12px; vertical-align: middle; }
+        .gantt-table .task-col { width: 35%; }
+        .gantt-days-col { width: 65%; }
+        .day-bar { height: 24px; background-color: var(--gray-dark); margin: 2px 0; border-radius: 4px; position: relative; }
+        .day-bar-inner { position: absolute; height: 100%; border-radius: 4px; }
+        .poc-bar { background: var(--accent-blue); }
+        .mvp-bar { background: var(--success-green); }
+    </style>
+</head>
+<body>
+    <main>
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <h1>Cambria AI</h1>
+            <p class="section-header p">
+                A strategic plan to build and launch a market-defining AI Receptionist. We will deliver a powerful, human-like conversational MVP for medical practices in an accelerated 8-week sprint.
+            </p>
+            <div class="hero-stats">
+                <div class="hero-stat"><div class="value">8 Weeks</div><div class="label">Time to MVP</div></div>
+                <div class="hero-stat"><div class="value">$9,800</div><div class="label">Total Capital Required</div></div>
+                <div class="hero-stat"><div class="value">1 Engineer</div><div class="label">Lean Execution Team</div></div>
+                <div class="hero-stat"><div class="value">4 Weeks</div><div class="label">Time to PoC</div></div>
+            </div>
+        </section>
+
+        <!-- EXECUTIVE SUMMARY -->
+        <section>
+            <div class="section-header">
+                <h2>Executive Summary</h2>
+                <p>Medical administrative costs are unsustainable. Front desks are overburdened, leading to staff burnout and a poor patient experience. Cambria AI solves this with an intelligent, empathetic AI Receptionist that handles all routine patient calls 24/7. This document outlines our accelerated 8-week plan to build a demo-ready MVP. Leveraging an existing codebase, a single expert engineer, and a cost-optimized AWS stack, we will deliver this high-impact product for under $10,000. Our goal is to secure our first pilot partners and prove the market need, setting the stage for rapid growth.</p>
+            </div>
+        </section>
+
+        <!-- VISION & MISSION -->
+        <section>
+            <div class="section-header">
+                <h2>Our Vision: The Autonomous Clinic</h2>
+                <p>We are not just answering calls. We are building the administrative backbone for the future of healthcare, allowing clinics to focus entirely on patient care.</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3>Phase 1: MVP (Q4 2025)</h3>
+                    <h4>The Perfect Receptionist</h4>
+                    <p>Establish the gold standard for AI-driven voice communication. Handle all inbound scheduling with superhuman efficiency and empathy. Gather critical real-world data to perfect our conversational engine.</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>Phase 2: V1.0 (Q1 2026)</h3>
+                    <h4>The Proactive Office Assistant</h4>
+                    <p>Introduce outbound calling for appointment reminders and follow-ups. Begin deep, bi-directional EMR integration (starting with Athena) for real-time data sync, eliminating manual data entry.</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>Phase 3: Enterprise (Q3 2026)</h3>
+                    <h4>The Autonomous Practice Manager</h4>
+                    <p>Automate the entire patient administrative lifecycle: from insurance verification and pre-authorizations to co-pay collection. Provide clinics with predictive analytics to optimize patient flow and revenue.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- PHOENIX ENGINE -->
+        <section>
+             <div class="section-header">
+                <h2>The Cambria Engine: Our Technical Edge</h2>
+                <p>Generic bots fail. Our competitive advantage comes from mastering the nuances of human conversation. These features are not add-ons; they are the core of our technology and patient experience.</p>
+            </div>
+            <div class="card-grid">
+                 <div class="card"><span class="icon">💬</span><h3>Graceful Interruption</h3><p class="card-text">Patients can interrupt and change topics mid-sentence. Our system immediately stops, listens, and pivots, just like a real person.</p><div class="card-metric">Why it matters: Prevents user frustration.</div></div>
+                <div class="card"><span class="icon">🧠</span><h3>Contextual Memory</h3><p class="card-text">If a patient says "next Tuesday," the AI asks, "Do you mean the 7th or the 14th?" to eliminate ambiguity and prevent costly booking errors.</p><div class="card-metric">Why it matters: Ensures accuracy.</div></div>
+                <div class="card"><span class="icon">🎼</span><h3>Empathetic Tone</h3><p class="card-text">We control the AI's vocal tone. Confirmations are reassuring, questions are inquisitive. It sounds like it cares, not like it's reading a script.</p><div class="card-metric">Why it matters: Builds patient trust.</div></div>
+                <div class="card"><span class="icon">✨</span><h3>Natural Pacing</h3><p class="card-text">To eliminate awkward silences, the AI uses natural fillers like, "Of course, let me just pull up that schedule for you..."</p><div class="card-metric">Why it matters: Feels more human.</div></div>
+                <div class="card"><span class="icon">🤝</span><h3>Seamless Human Handoff</h3><p class="card-text">If a caller needs a human, the AI transfers the call *and* provides the agent with a live transcript, so the patient never has to repeat themselves.</p><div class="card-metric">Why it matters: Respects everyone's time.</div></div>
+                <div class="card"><span class="icon">📚</span><h3>Instant Clinic Knowledge</h3><p class="card-text">The AI can answer clinic-specific questions ("Do you take my insurance?", "What are your hours?") by instantly querying an internal knowledge base.</p><div class="card-metric">Why it matters: Provides immediate answers.</div></div>
+            </div>
+        </section>
+
+        <!-- ARCHITECTURE -->
+        <section>
+            <div class="section-header">
+                <h2>Cost-Optimized & Scalable AWS Architecture</h2>
+                <p>Our infrastructure is designed for extreme efficiency and performance. We use serverless and managed services to keep idle costs near zero while ensuring we can scale to thousands of calls instantly.</p>
+            </div>
+            <div class="diagram-container">
+                <svg width="100%" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+                    <style>
+                        .box { fill: #111827; stroke: #374151; stroke-width: 1.5; rx: 8; }
+                        .label { font-family: 'Inter', sans-serif; font-size: 16px; fill: #ffffff; font-weight: 600; text-anchor: middle; }
+                        .sub-label { font-family: 'Inter', sans-serif; font-size: 12px; fill: #9ca3af; text-anchor: middle; }
+                        .arrow-line { stroke: #6b7280; stroke-width: 1.5; }
+                        .arrow-head { fill: #6b7280; }
+                    </style>
+                    <defs>
+                        <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="arrow-head" /></marker>
+                    </defs>
+                    
+                    <!-- Main AWS Boundary -->
+                    <rect x="200" y="10" width="680" height="580" class="box" style="stroke-dasharray: 5,5; fill: #000;" />
+                    <text x="540" y="40" class="label" style="font-size: 18px;">AWS Cloud</text>
+                    
+                    <!-- Left Side: Users & Telephony -->
+                    <rect x="20" y="150" width="150" height="80" class="box" /><text x="95" y="180" class="label">Patient</text><text x="95" y="200" class="sub-label">(Phone Call)</text>
+                    <rect x="20" y="350" width="150" height="80" class="box" /><text x="95" y="380" class="label">Clinic Staff</text><text x="95" y="400" class="sub-label">(Web Dashboard)</text>
+                    
+                    <!-- Middle Column: API Gateway & Auth -->
+                    <rect x="220" y="250" width="160" height="100" class="box" /><text x="300" y="280" class="label">Amazon API Gateway</text><text x="300" y="300" class="sub-label">REST & WebSocket</text>
+                    <rect x="220" y="400" width="160" height="80" class="box" /><text x="300" y="430" class="label">AWS Cognito</text><text x="300" y="450" class="sub-label">User Management</text>
+                    
+                    <!-- Right Column: Core Logic -->
+                    <rect x="420" y="150" width="200" height="300" class="box" style="fill:#1a1a1a;" /><text x="520" y="180" class="label">AWS Fargate</text><text x="520" y="200" class="sub-label">(Containerized FastAPI App)</text>
+                    <rect x="440" y="220" width="160" height="60" class="box" /><text x="520" y="250" class="label">Orchestrator</text>
+                    <rect x="440" y="300" width="160" height="60" class="box" /><text x="520" y="330" class="label">NLP Engine</text>
+                    <rect x="440" y="380" width="160" height="60" class="box" /><text x="520" y="410" class="label">Data Access</text>
+
+                    <!-- Far Right: Data & AI Services -->
+                    <rect x="660" y="60" width="200" height="80" class="box" /><text x="760" y="90" class="label">3rd Party AI APIs</text><text x="760" y="110" class="sub-label">STT, LLM, TTS</text>
+                    <rect x="660" y="160" width="200" height="80" class="box" /><text x="760" y="190" class="label">Amazon RDS</text><text x="760" y="210" class="sub-label">PostgreSQL for Call Logs</text>
+                    <rect x="660" y="260" width="200" height="80" class="box" /><text x="760" y="290" class="label">Amazon ElastiCache</text><text x="760" y="310" class="sub-label">Redis for Session State</text>
+                    <rect x="660" y="360" width="200" height="80" class="box" /><text x="760" y="390" class="label">Amazon Kendra</text><text x="760" y="410" class="sub-label">For Knowledge Base</text>
+                    <rect x="660" y="460" width="200" height="80" class="box" /><text x="760" y="490" class="label">Amazon S3</text><text x="760" y="510" class="sub-label">For Call Recordings</text>
+                    
+                    <!-- Connections -->
+                    <path class="arrow-line" d="M 170 190 L 220 270" marker-end="url(#arrow)"></path> <!-- Patient to API GW -->
+                    <path class="arrow-line" d="M 170 390 L 220 420" marker-end="url(#arrow)"></path> <!-- Staff to Cognito -->
+                    <path class="arrow-line" d="M 380 300 L 420 300" marker-end="url(#arrow)"></path> <!-- API GW to Fargate -->
+                    <path class="arrow-line" d="M 380 440 L 420 410" marker-end="url(#arrow)"></path> <!-- Cognito to Fargate -->
+                    <path class="arrow-line" d="M 620 250 L 660 100" marker-end="url(#arrow)"></path> <!-- Fargate to AI -->
+                    <path class="arrow-line" d="M 620 410 L 660 200" marker-end="url(#arrow)"></path> <!-- Fargate to RDS -->
+                    <path class="arrow-line" d="M 620 250 L 660 300" marker-end="url(#arrow)"></path> <!-- Fargate to ElastiCache -->
+                    <path class="arrow-line" d="M 620 410 L 660 400" marker-end="url(#arrow)"></path> <!-- Fargate to Kendra -->
+                    <path class="arrow-line" d="M 620 410 L 660 500" marker-end="url(#arrow)"></path> <!-- Fargate to S3 -->
+                </svg>
+            </div>
+        </section>
+
+        <!-- 8-WEEK ROADMAP -->
+        <section>
+            <div class="section-header">
+                <h2>Accelerated 8-Week Sprint: PoC to MVP</h2>
+                <p>This timeline is structured in two distinct sprints. By Day 20, we will have a functional Proof of Concept (PoC) to validate the core technology. The following four weeks are dedicated to building out the full MVP feature set and polishing the experience for demos.</p>
+            </div>
+            <div class="table-container gantt-table">
+                <table>
+                    <thead><tr><th class="task-col">Task Deliverable</th><th>Days</th><th class="gantt-days-col">Timeline (40 Days)</th></tr></thead>
+                    <tbody>
+                        <tr><td colspan="3" style="background-color: var(--gray-darker); font-weight: 600; color: var(--accent-blue);">Sprint 1: Proof of Concept (Days 1-20)</td></tr>
+                        <tr><td>**Week 1:** Cloud Foundation & Deployment</td><td>5</td><td><div class="day-bar"><div class="day-bar-inner poc-bar" style="width: 12.5%; left: 0%;"></div></div></td></tr>
+                        <tr><td>**Week 2:** API Selection & Basic Integration</td><td>5</td><td><div class="day-bar"><div class="day-bar-inner poc-bar" style="width: 12.5%; left: 12.5%;"></div></div></td></tr>
+                        <tr><td>**Week 3:** Core Call Flow & State Management</td><td>5</td><td><div class="day-bar"><div class="day-bar-inner poc-bar" style="width: 12.5%; left: 25%;"></div></div></td></tr>
+                        <tr><td>**Week 4:** User Management & PoC Handoff</td><td>5</td><td><div class="day-bar"><div class="day-bar-inner poc-bar" style="width: 12.5%; left: 37.5%;"></div></div></td></tr>
+                        
+                        <tr><td colspan="3" style="background-color: var(--gray-darker); font-weight: 600; color: var(--success-green);">Sprint 2: MVP Polish & Hardening (Days 21-40)</td></tr>
+                        <tr><td>**Week 5:** Full Scheduling & Multilingual Logic</td><td>5</td><td><div class="day-bar"><div class="day-bar-inner mvp-bar" style="width: 12.5%; left: 50%;"></div></div></td></tr>
+                        <tr><td>**Week 6:** Conversational Delighters Implementation</td><td>5</td><td><div class="day-bar"><div class="day-bar-inner mvp-bar" style="width: 12.5%; left: 62.5%;"></div></div></td></tr>
+                        <tr><td>**Week 7:** Knowledge Base & Testing</td><td>5</td><td><div class="day-bar"><div class="day-bar-inner mvp-bar" style="width: 12.5%; left: 75%;"></div></div></td></tr>
+                        <tr><td>**Week 8:** Latency Optimization & Demo Prep</td><td>5</td><td><div class="day-bar"><div class="day-bar-inner mvp-bar" style="width: 12.5%; left: 87.5%;"></div></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        <!-- FINANCIALS -->
+        <section>
+            <div class="section-header">
+                <h2>The $10k MVP: A Capital-Efficient Launch</h2>
+                <p>Our lean, single-engineer model, accelerated by existing code, allows us to achieve a feature-rich, demo-ready product with exceptional efficiency.</p>
+            </div>
+            <div class="financial-summary">
+                <div><div class="cost">$8,000</div><div class="cost-label">Total HR Cost (8 Weeks @ $25/hr)</div></div>
+                <div><div class="cost">$800</div><div class="cost-label">Est. Technical Costs (2 Months)</div></div>
+                <div><div class="cost">$1,000</div><div class="cost-label">Contingency (11%)</div></div>
+            </div>
+        </section>
+        
+        <!-- COST PER CALL -->
+        <section>
+            <div class="section-header">
+                <h2>Unit Economics: Cost Per Call Analysis</h2>
+                <p>Understanding our variable costs is key to a sustainable business model. We have analyzed the API costs for a typical 2-minute patient call to ensure profitability at scale.</p>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Service</th><th>Usage per Call (Est.)</th><th>Cost (USD)</th></tr></thead>
+                    <tbody>
+                        <tr><td>Telephony (Twilio)</td><td>2 minutes</td><td>~$0.03</td></tr>
+                        <tr><td>Speech-to-Text (e.g., Deepgram)</td><td>2 minutes</td><td>~$0.02</td></tr>
+                        <tr><td>Language Model (e.g., Claude 3 Haiku)</td><td>~10k tokens (in/out)</td><td>~$0.003</td></tr>
+                        <tr><td>Text-to-Speech (e.g., ElevenLabs)</td><td>~3,000 characters</td><td>~$0.01</td></tr>
+                        <tr><td style="font-weight: 600;">Total Estimated Cost Per Call</td><td style="font-weight: 600;"></td><td style="font-weight: 600;">~$0.063</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- API EVALUATION -->
+        <section>
+             <div class="section-header">
+                <h2>Our Technology Philosophy: Best-in-Breed</h2>
+                <p>We don't build what we can buy better. We will rigorously benchmark the world's best AI services to assemble an unbeatable, low-latency stack.</p>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Category</th><th>Providers to Evaluate</th><th>Primary Decision Criteria</th></tr></thead>
+                    <tbody>
+                        <tr><td>Speech-to-Text</td><td>AWS Transcribe, Deepgram Nova-2, AssemblyAI</td><td><strong>Latency & Accuracy:</strong> Sub-second, real-time streaming with high accuracy for medical terms.</td></tr>
+                        <tr><td>Text-to-Speech</td><td>AWS Polly (Neural), ElevenLabs, PlayHT</td><td><strong>Voice Quality & Latency:</strong> Must sound human and empathetic, with a Time-to-First-Audio under 300ms.</td></tr>
+                        <tr><td>Language Model</td><td>Amazon Bedrock (Claude 3 Haiku/Sonnet), OpenAI (GPT-4o), Google (Gemini 1.5 Pro)</td><td><strong>Intelligence & Speed:</strong> Flawless intent recognition with the lowest time-to-first-token.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>
+
